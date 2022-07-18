@@ -32,17 +32,17 @@ abstract class BaseRepository
      */
     public function __call($name, $arguments)
     {
-        if (Str::startsWith($name,'searchByUnq')) {
+        if (Str::startsWith($name,'searchBy')) {
             $builder = $arguments[1] ?? $this->newQuery();
-            $attribute = Str::snake(Str::replaceFirst('searchByUnq','',$name));
-            return $builder->where($attribute, $arguments[0]);
+            $attribute = Str::snake(Str::replaceFirst('searchBy','',$name));
+            return $builder->where($attribute, $arguments[0])->get();
         }
-        if (Str::startsWith($name,'findByUnq')) {
-            $attribute = Str::snake(Str::replaceFirst('findByUnq','',$name));
+        if (Str::startsWith($name,'findBy')) {
+            $attribute = Str::snake(Str::replaceFirst('findBy','',$name));
             return $this->newQuery()->firstWhere($attribute, $arguments[0]);
         }
-        if (Str::startsWith($name,'findOrFailByUnq')) {
-            $attribute = Str::snake(Str::replaceFirst('findOrFailByUnq','',$name));
+        if (Str::startsWith($name,'findOrFailBy')) {
+            $attribute = Str::snake(Str::replaceFirst('findOrFailBy','',$name));
             return $this->newQuery()->where($attribute, $arguments[0])->firstOrFail();
         }
     }
