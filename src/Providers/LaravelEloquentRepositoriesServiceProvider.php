@@ -2,7 +2,9 @@
 
 namespace MrGabriCavi\LaravelEloquentRepositories\Providers;
 
-class LaravelEloquentRepositoriesServiceProvider
+use Illuminate\Support\ServiceProvider;
+
+class LaravelEloquentRepositoriesServiceProvider extends ServiceProvider
 {
 
 }
