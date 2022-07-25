@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
+use ReflectionObject;
 use Throwable;
 
 abstract class BaseRepository
@@ -15,6 +16,11 @@ abstract class BaseRepository
      * @var Model
      */
     protected $model;
+
+    /**
+     * @var ReflectionObject
+     */
+    protected $modelReflection;
 
     /**
      * @param $model
@@ -55,6 +61,11 @@ abstract class BaseRepository
         return $this->model;
     }
 
+    public function modelReflection()
+    {
+        return $this->modelReflection;
+    }
+
     /**
      * @param Model$model
      * @return void
@@ -70,6 +81,7 @@ abstract class BaseRepository
             throw new Exception("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
         }
         $this->model = $model;
+        $this->modelReflection = new ReflectionObject($this->model);
     }
 
     /**
@@ -126,7 +138,7 @@ abstract class BaseRepository
      */
     public function update($target, $attributes)
     {
-        if ($target instanceof $this->model()::class) {
+        if ($target instanceof $this->modelReflection()->getName()) {
             $model = $target;
         } else {
             $model = $this->findOrFail($target);
@@ -143,7 +155,7 @@ abstract class BaseRepository
      */
     public function delete($target)
     {
-        if ($target instanceof $this->model()::class) {
+        if ($target instanceof $this->modelReflection()->getName()) {
             $model = $target;
         } else {
             $model = $this->findOrFail($target);
