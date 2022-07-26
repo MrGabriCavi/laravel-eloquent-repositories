@@ -39,17 +39,17 @@ abstract class BaseRepository
     public function __call($name, $arguments)
     {
         if (Str::startsWith($name,'searchBy')) {
-            $builder = $arguments[1] ?? $this->newQuery();
+            $builder = $arguments[1] ?? $this->queryBuilder();
             $attribute = Str::snake(Str::replaceFirst('searchBy','',$name));
             return $builder->where($attribute, $arguments[0])->get();
         }
         if (Str::startsWith($name,'findBy')) {
             $attribute = Str::snake(Str::replaceFirst('findBy','',$name));
-            return $this->newQuery()->firstWhere($attribute, $arguments[0]);
+            return $this->queryBuilder()->firstWhere($attribute, $arguments[0]);
         }
         if (Str::startsWith($name,'findOrFailBy')) {
             $attribute = Str::snake(Str::replaceFirst('findOrFailBy','',$name));
-            return $this->newQuery()->where($attribute, $arguments[0])->firstOrFail();
+            return $this->queryBuilder()->where($attribute, $arguments[0])->firstOrFail();
         }
     }
 
@@ -138,7 +138,8 @@ abstract class BaseRepository
      */
     public function update($target, $attributes)
     {
-        if ($target instanceof $this->modelReflection()->getName()) {
+        $modelClassName = $this->modelReflection()->getName();
+        if ($target instanceof $modelClassName) {
             $model = $target;
         } else {
             $model = $this->findOrFail($target);
@@ -155,7 +156,8 @@ abstract class BaseRepository
      */
     public function delete($target)
     {
-        if ($target instanceof $this->modelReflection()->getName()) {
+        $modelClassName = $this->modelReflection()->getName();
+        if ($target instanceof $modelClassName) {
             $model = $target;
         } else {
             $model = $this->findOrFail($target);
