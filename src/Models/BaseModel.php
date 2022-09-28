@@ -22,6 +22,10 @@ abstract class BaseModel extends Model
      */
     protected $uuid_key_name = 'uuid';
 
+    protected $guarded = [
+        'uuid'
+    ];
+
     /**
      * @return string
      */
